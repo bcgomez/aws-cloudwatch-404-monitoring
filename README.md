@@ -1,91 +1,182 @@
-# aws-cloudwatch-404-monitoring
+# 🧠 AWS CloudWatch 404 Monitoring
+
 Monitoreo de errores HTTP 404 en un servidor web usando AWS CloudWatch, métricas, alarmas y SNS.
+
+---
 
 ![AWS](https://img.shields.io/badge/AWS-CloudWatch-orange)
 ![Monitoring](https://img.shields.io/badge/Monitoring-Active-brightgreen)
 ![Status](https://img.shields.io/badge/Status-Completed-success)
 ![Type](https://img.shields.io/badge/Project-DevOps-blue)
 
+---
 
-📌 1. Introducción
+## 📌 1. Introducción
 
-Este laboratorio implementa una solución de monitoreo para detectar errores HTTP 404 en un servidor web desplegado en AWS EC2, utilizando CloudWatch Logs, Metric Filters y Alarmas.
+Este laboratorio implementa una solución de monitoreo para detectar errores HTTP 404 en un servidor web desplegado en Amazon EC2, utilizando servicios de AWS como CloudWatch Logs, Metric Filters, CloudWatch Alarms y Amazon SNS.
 
-⚠️ 2. Problemática
+El objetivo es transformar eventos de logs en métricas accionables y generar alertas automáticas ante comportamientos anómalos.
 
-Las aplicaciones web pueden generar errores (como 404) que afectan la experiencia del usuario, pero sin monitoreo:
+---
 
-No se detectan a tiempo
-No hay alertas
-Se depende de que el usuario reporte
+## ⚠️ 2. Problemática
 
-💡 3. Solución
+Las aplicaciones web pueden generar errores (como HTTP 404) que afectan la experiencia del usuario. Sin un sistema de monitoreo adecuado:
 
-Se implementa:
+- ❌ No se detectan los errores a tiempo  
+- ❌ No existen alertas automáticas  
+- ❌ Se depende de reportes manuales de los usuarios  
 
-CloudWatch Logs → captura de logs
-Metric Filters → detección de errores
-CloudWatch Alarms → alertas
-SNS → notificación por correo
+Esto genera una respuesta reactiva en lugar de proactiva.
 
-⚙️ 4. Implementación
-🔹 4.1 Verificación del servidor Apache
-![Apache](images/Picture1.png)
+---
+
+## 💡 3. Solución
+
+Se implementa una arquitectura de monitoreo basada en:
+
+- 📊 **CloudWatch Logs** → Captura y almacenamiento de logs  
+- 🔍 **Metric Filters** → Detección de patrones (errores 404)  
+- 🚨 **CloudWatch Alarms** → Generación de alertas  
+- 📧 **Amazon SNS** → Notificación automática por correo  
+
+---
+
+## ⚙️ 4. Implementación
+
+---
+
+### 🔹 4.1 Verificación del servidor Apache
+
+Se valida que el servidor web Apache esté correctamente desplegado en la instancia EC2.
+
+![Apache](images/Picture1.png)  
 *Figura 1. Página de prueba del servidor Apache funcionando correctamente.*
 
-🔹 4.2 Generación de error 404
-![Error 404](images/Picture2.png)
+---
+
+### 🔹 4.2 Generación de error HTTP 404
+
+Se accede a una ruta inexistente para generar un error controlado.
+
+![Error 404](images/Picture2.png)  
 *Figura 2. Generación de error HTTP 404 al acceder a una ruta inexistente.*
 
-🔹 4.3 Configuración de logs en CloudWatch
-![Log groups](images/Picture3.png)
+---
+
+### 🔹 4.3 Configuración de logs en CloudWatch
+
+Se configuran los grupos de logs para almacenar los eventos del servidor web.
+
+![Log groups](images/Picture3.png)  
 *Figura 3. Grupos de logs creados para almacenar eventos del servidor.*
 
-🔹 4.4 Visualización de eventos
-![Log events](images/Picture4.png)
+---
+
+### 🔹 4.4 Visualización de eventos
+
+Se inspeccionan los logs generados por las solicitudes HTTP.
+
+![Log events](images/Picture4.png)  
 *Figura 4. Visualización de eventos HTTP en CloudWatch Logs.*
 
-🔹 4.5 Creación del Metric Filter
-![Metric filter](images/Picture5.png)
+---
+
+### 🔹 4.5 Creación del Metric Filter
+
+Se define un filtro para detectar automáticamente errores 404 en los logs.
+
+![Metric filter](images/Picture5.png)  
 *Figura 5. Definición del filtro para detectar errores 404 en logs.*
 
-🔹 4.6 Validación del filtro
-![Test filter](images/Picture6.png)
+---
+
+### 🔹 4.6 Validación del filtro
+
+Se prueba el filtro para confirmar que detecta correctamente los eventos.
+
+![Test filter](images/Picture6.png)  
 *Figura 6. Validación del filtro mostrando coincidencias con errores 404.*
 
-🔹 4.7 Configuración de la métrica
-![Metric config](images/Picture7.png)
+---
+
+### 🔹 4.7 Configuración de la métrica
+
+Se crea una métrica personalizada basada en los errores detectados.
+
+![Metric config](images/Picture7.png)  
 *Figura 7. Configuración de la métrica basada en errores 404.*
 
-🔹 4.8 Configuración de notificaciones (SNS)
-![SNS](images/Picture8.png)
+---
+
+### 🔹 4.8 Configuración de notificaciones (SNS)
+
+Se configura Amazon SNS para enviar alertas por correo electrónico.
+
+![SNS](images/Picture8.png)  
 *Figura 8. Configuración del envío de notificaciones mediante SNS.*
 
-🔹 4.9 Detalles de la alarma
-![Alarm details](images/Picture9.png)
+---
+
+### 🔹 4.9 Detalles de la alarma
+
+Se define el nombre y descripción de la alarma.
+
+![Alarm details](images/Picture9.png)  
 *Figura 9. Definición del nombre y descripción de la alarma.*
 
-🔹 4.10 Creación de la alarma
-![Alarm created](images/Picture10.png)
+---
+
+### 🔹 4.10 Creación de la alarma
+
+Se crea la alarma en CloudWatch basada en la métrica generada.
+
+![Alarm created](images/Picture10.png)  
 *Figura 10. Confirmación de creación de la alarma en CloudWatch.*
 
-🔹 4.11 Alarma activada
-![Alarm triggered](images/Picture11.png)
+---
+
+### 🔹 4.11 Activación de la alarma
+
+Se generan múltiples errores para activar la alarma y validar el sistema.
+
+![Alarm triggered](images/Picture11.png)  
 *Figura 11. Activación de la alarma tras generar múltiples errores 404.*
 
+---
 
-✅ 5. Validación
+## ✅ 5. Validación
 
-Se comprobó:
+Se verificó el correcto funcionamiento del sistema mediante:
 
-Generación de errores 404
-Registro en logs
-Conversión a métricas
-Activación de alarma
-Recepción de notificación
+- ✔ Generación de errores HTTP 404  
+- ✔ Registro en CloudWatch Logs  
+- ✔ Conversión de eventos a métricas  
+- ✔ Activación automática de alarmas  
+- ✔ Recepción de notificaciones vía SNS  
 
+---
 
-📊 6. Conclusión
+## 📊 6. Conclusión
 
-Se logró implementar un sistema de monitoreo proactivo que permite detectar errores en tiempo real y notificar automáticamente, mejorando la observabilidad del sistema.
+Se implementó exitosamente un sistema de monitoreo proactivo capaz de detectar errores en tiempo real y generar alertas automáticas.
 
+Esta solución mejora significativamente la observabilidad del sistema y permite una respuesta rápida ante fallos en la aplicación.
+
+---
+
+## 🧠 7. Valor Profesional
+
+Este proyecto demuestra habilidades en:
+
+- ☁️ AWS CloudWatch (Logs, Metrics, Alarms)  
+- 🔍 Observabilidad y monitoreo  
+- 🚨 Automatización de alertas  
+- 🧩 Análisis de logs  
+
+---
+
+## 👩‍💻 Autor
+
+**Barbara Catalina Gómez Pérez**  
+Proyecto de formación en Cloud Computing y DevOps 🚀
